@@ -41,7 +41,7 @@ def main():
     #save the scraped data to a json file
     with open('./data/IndigoCurrent.json', 'w') as outfile:
         json.dump(data, outfile)
-        print('Indigo sales data has been scraped and saved to IndigoCurrent.json')
+        print('Indigo sales data has been scraped and saved to ./data/IndigoCurrent.json')
         outfile.close()
 
 if __name__ == "__main__":

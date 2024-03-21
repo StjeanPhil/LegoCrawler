@@ -28,9 +28,9 @@ def main():
 
 
     #execute the indigoIndigo Crawler
-    #exec(open('indigoCrawl.py').read())
+    exec(open('indigoCrawl.py').read())
     #Get the result from the crawler
-    indigoData =json.loads(open('IndigoCurrent.json').read())
+    indigoData =json.loads(open('./data/IndigoCurrent.json').read())
 
 
     #compare price of products with watchlist
