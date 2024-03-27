@@ -1,54 +1,48 @@
 import json
-import indigoCrawl
-import requests
+
+
 from bs4 import BeautifulSoup
+from scripts.indigoCrawl import isInStock as isInStockIndigo
+from scripts.indigoCrawl import crawl as crawlIndigo
+from scripts.bestbuyCrawl import crawl as crawlBestBuy
 
 
-#Tests if the product is in stock. Return true/false
-def isInStock(p):
-    # Define the URL    
-    url="https://www.indigo.ca/en-ca/search?q="+p["name"]+"+lego"
-    response = requests.get(url)
-    # Parse the HTML content
-    soup = BeautifulSoup(response.content, 'html.parser')
-    # Find the "add to cart" button
-    symbol = soup.find(class_='add-to-cart')
-    #check if the "add to cart" button is disabled
-    if symbol.get('disabled') !="":
-        return True
-    return False
 
 def main():
 
     #initialize list of alerts
     alerts = []
-
-    #get wathclist
-    watchlist = json.loads(open('watchlist.json').read())
-
-
+    #get watchlist
+    watchlist = json.loads(open('./data/watchlist.json').read())
     #execute the indigoIndigo Crawler
-    exec(open('indigoCrawl.py').read())
-    #Get the result from the crawler
-    indigoData =json.loads(open('./data/IndigoCurrent.json').read())
-
-
+    indigoData =crawlIndigo()
+    bestbuyData =crawlBestBuy()
     #compare price of products with watchlist
-    for item in indigoData:
-        for watch in watchlist:
+    for watch in watchlist:
+        #Indigo 
+        #DOES NOT HAVE STOCK IN THE SEARCH PAGE, STOCK IS ONLY CHECKED IF THE PRODUCT IS IN THE WATCHLIST
+        for item in indigoData:
             if item['name'] == watch['name']:
                 if int(item['price']) < int(watch['price']):
-                    product= {
-                        'name': item['name'],
-                        'price': item['price'],
-                        'site': 'Indigo'
-                    }
+                    product=item
+                    product['store']='Indigo'
                     #if the product is in stock, add it to the alerts
-                    if isInStock(product):alerts.append(product)
+                    if isInStockIndigo(product):
+                        product['inStock']=True
+                        alerts.append(product)
+
+        #BestBuy
+        #Has both store and online stock in the search page
+        for item in bestbuyData:
+            if item['name'] == watch['name']:
+                if int(item['price']) < int(watch['price']):
+                    product=item
+                    product['store']='BestBuy'
+                    alerts.append(product)
 
     #save the alerts to a json file
     if len(alerts) > 0:
-        with open('IndigoCurrent.json', 'w') as outfile:
+        with open('./data/AlertsCurrent.json', 'w') as outfile:
             json.dump(alerts, outfile)
             print('We found some good deals! :)')
     else:
