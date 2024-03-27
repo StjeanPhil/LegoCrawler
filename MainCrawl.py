@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from scripts.indigoCrawl import isInStock as isInStockIndigo
 from scripts.indigoCrawl import crawl as crawlIndigo
 from scripts.bestbuyCrawl import crawl as crawlBestBuy
-
+from scripts.toysrusCrawl import crawl as crawlToysRUs
 
 
 def main():
@@ -17,6 +17,7 @@ def main():
     #execute the indigoIndigo Crawler
     indigoData =crawlIndigo()
     bestbuyData =crawlBestBuy()
+    toyrusData =crawlToysRUs()
     #compare price of products with watchlist
     for watch in watchlist:
         #Indigo 
@@ -36,9 +37,19 @@ def main():
         for item in bestbuyData:
             if item['name'] == watch['name']:
                 if int(item['price']) < int(watch['price']):
-                    product=item
-                    product['store']='BestBuy'
-                    alerts.append(product)
+                    if item['inStock'] == True or item['inStore'] == True:
+                        product=item
+                        product['store']='BestBuy'
+                        alerts.append(product)
+        #ToysRUs
+        for item in toyrusData:
+            if item['name'] == watch['name']:
+                if int(item['price']) < int(watch['price']):
+                    if item['inStock'] == True or item['available'] == "Pickup Only":
+                        product=item
+                        product['store']='ToysRUs'
+
+                        alerts.append(product)
 
     #save the alerts to a json file
     if len(alerts) > 0:
