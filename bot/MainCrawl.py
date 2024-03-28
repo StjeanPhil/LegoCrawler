@@ -1,7 +1,5 @@
 import json
 
-
-from bs4 import BeautifulSoup
 from scripts.indigoCrawl import isInStock as isInStockIndigo
 from scripts.indigoCrawl import crawl as crawlIndigo
 from scripts.bestbuyCrawl import crawl as crawlBestBuy
@@ -31,7 +29,6 @@ def main():
                     if isInStockIndigo(product):
                         product['inStock']=True
                         alerts.append(product)
-
         #BestBuy
         #Has both store and online stock in the search page
         for item in bestbuyData:

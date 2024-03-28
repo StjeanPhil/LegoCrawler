@@ -1,8 +1,5 @@
 import json
-#import indigoCrawl
-import requests
 from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
 from datetime import datetime
 
 import re
