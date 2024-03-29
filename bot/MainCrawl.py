@@ -4,7 +4,7 @@ from scripts.indigoCrawl import isInStock as isInStockIndigo
 from scripts.indigoCrawl import crawl as crawlIndigo
 from scripts.bestbuyCrawl import crawl as crawlBestBuy
 from scripts.toysrusCrawl import crawl as crawlToysRUs
-
+from scripts.legositeCrawl import crawl as crawlLegoSite
 
 def main():
 
@@ -16,6 +16,7 @@ def main():
     indigoData =crawlIndigo()
     bestbuyData =crawlBestBuy()
     toyrusData =crawlToysRUs()
+    legostieData= crawlLegoSite()
     #compare price of products with watchlist
     for watch in watchlist:
         #Indigo 
@@ -47,14 +48,23 @@ def main():
                         product['store']='ToysRUs'
 
                         alerts.append(product)
+        #LegoSite
+        for item in legostieData:
+            if item['name'] == watch['name']:
+                if int(item['price']) < int(watch['price']):
+                    product=item
+                    product['store']='LegoSite'
+                    alerts.append(product)
 
     #save the alerts to a json file
     if len(alerts) > 0:
-        with open('./data/AlertsCurrent.json', 'w') as outfile:
+        with open('./data/hitlist.json', 'w') as outfile:
             json.dump(alerts, outfile)
             print('We found some good deals! :)')
+            
     else:
         print('No deals today. :(')
+    return(alerts)
 
 if __name__ == "__main__":
     main()

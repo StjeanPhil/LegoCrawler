@@ -8,8 +8,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-import undetected_chromedriver as uc 
+#import undetected_chromedriver as uc 
 
+from selenium_stealth import stealth
 
 
 
@@ -72,35 +73,33 @@ def scanSite(driver,data):
             scanSite(driver,data)
             
 
-
 def crawl():
     
-    url ='https://www.walmart.ca/en/search?q=lego&facet=f_SellerType_en%3AWalmart%7C%7Cf_Availability_en%3AOnline%7C%7Cbrand%3ALEGO&catId=10011_6000205043132'
-    #initialize the browser
-    # Create Chromeoptions instance 
+    url ='https://www.walmart.ca/en/search?q=lego'
+
     options = webdriver.ChromeOptions() 
-    
-    # Adding argument to disable the AutomationControlled flag 
+    options.add_argument("start-maximized")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_argument("--disable-blink-features=AutomationControlled") 
-    
-    # Exclude the collection of enable-automation switches 
-    options.add_experimental_option("excludeSwitches", ["enable-automation"]) 
-    
-    # Turn-off userAutomationExtension 
     options.add_experimental_option("useAutomationExtension", False) 
     
-    # Setting the driver path and requesting a page 
-    driver = uc.Chrome() 
+
+    driver = webdriver.Chrome(options=options) 
     
-    # Changing the property of the navigator value for webdriver to undefined 
-    #driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})") 
     data=[]
+    stealth(driver,
+        languages=["en-US", "en"],
+        vendor="Google Inc.",
+        platform="Win32",
+        webgl_vendor="Intel Inc.",
+        renderer="Intel Iris OpenGL Engine",
+        fix_hairline=True,
+        )
     #go to the website
     driver.get(url)
     time.sleep(4)
     #accept cookies
     element = driver.find_element(By.XPATH, "//button[text()='Accept all']")
-    
     actions = ActionChains(driver)#initialize the action chain=
     actions.move_to_element(element).click().perform()
     time.sleep(2)
@@ -110,7 +109,7 @@ def crawl():
     
 
 
-    with open('./data/WalmartCurrent.json', 'w') as outfile:
+    with open('./data/Walmarttest.json', 'w') as outfile:
             json.dump(data, outfile)
             print('Walmart sales data has been scraped and saved to ./data/IndigoCurrent.json')
             outfile.close()

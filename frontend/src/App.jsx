@@ -127,6 +127,24 @@ function App() {
     }
     return
   }
+  const unleashTheBots = () => {
+    console.log("Unleashing the bots")
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/crawl", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+      console.log(xhr)
+        if (xhr.readyState==4  && xhr.status === 200) {
+            // Handle response if needed
+            console.log('Script executed successfully:', xhr.responseText);
+            const newHitlist = JSON.parse(xhr.responseText)
+            setHitlist(newHitlist)
+        }else{
+          console.log(xhr.responseText);
+        }
+    };
+    xhr.send(JSON.stringify({}));
+  }
 
   return (
     <>
@@ -134,7 +152,7 @@ function App() {
         <h1>LegoCrawler</h1>
         <div style={menu}>
           <img src={brickboy}  className="logo" alt="Brick Boyyy" />
-          <button style={redbtn} onClick={sendHello}>Crawl</button>
+          <button style={redbtn} onClick={()=>unleashTheBots()}>Crawl</button>
         </div>
         
         
