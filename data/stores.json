@@ -1,0 +1,32 @@
+[
+  {
+    "shop_id": 1,
+    "shop_name": "Indigo",
+    "website": "https://www.indigo.ca",
+    "notes": "Only scrape Lego sets on sale"
+  },
+  {
+    "shop_id": 2,
+    "shop_name": "BestBuys",
+    "website": "https://www.bestbuy.ca",
+    "notes": "Only scrape Lego sets on sale"
+  },
+  {
+    "shop_id": 3,
+    "shop_name": "Lego Official Site",
+    "website": "https://www.lego.com",
+    "notes": "Only scrape Lego sets on sale"
+  },
+  {
+    "shop_id": 4,
+    "shop_name": "ToysRUs",
+    "website": "https://www.toysrus.ca",
+    "notes": "Scrapes all lego sets of the whole site"
+  },
+  {
+    "shop_id": 5,
+    "shop_name": "Walmart",
+    "website": "https://www.walmart.ca",
+    "notes": "Scrapes only products minimaly available online "
+  }
+]

@@ -12,7 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-def crawl():
+def crawl(currId):
+    #f= open("./data/BestBuyCurrent.json","r")
+    #data=json.load(f)
+    #return data,currId
     url="https://www.bestbuy.ca/en-ca/collection/lego-on-sale/130073?path=category%253AToys%252C%2BGames%2B%2526%2BEducation%253Bcategory%253ALEGO%2B%2526%2BBuilding%2BBlocks%253Bcategory%253ALEGO%253Bcurrentoffers0enrchstring%253AOn%2BSale%253BbrandName%253ALEGO%253BsellerName%253ABestBuyCanada"
     #initialize the webdriver
     driver=webdriver.Chrome()
@@ -71,17 +74,20 @@ def crawl():
 
         # Create a dictionary with the scraped data
         product = {
-            'name': name,   #Series number
+            'log_id': currId,   #Unique id for the log
+            'date': date,    #Data's date
+            'shop_id': 2,   #Shop's id
+            'set_num': name,   #Series number
             'price': price, #Price in cents
-            'href': "https://www.bestbuy.ca"+href,  #Link to the product
-            'inStock': inStock, #True if the product is in stock, False otherwise
-            'inStore': inStore, #True if the product is in store, False otherwise
-            'date': date    #Data's date
-
+            'link': "https://www.bestbuy.ca"+href,  #Link to the product
+            'inStock':1 if inStock else 0, #True if the product is in stock, False otherwise
+            'ships': 1 if inStock else 0, #True if the product is in stock, False otherwise
+            'pickup': 1 if inStore else 0 #True if the product is in store, False otherwise
         }
 
         # Append the dictionary to the list
         data.append(product)
+        currId+=1
 
     #save the scraped data to a json file
     with open('./data/BestBuyCurrent.json', 'w') as outfile:
@@ -89,7 +95,7 @@ def crawl():
         print('BestBuy sales data has been scraped and saved to ./data/BestBuyCurrent.json')
         outfile.close()
     
-    return data
+    return data,currId
 
 
 if __name__ == "__main__":

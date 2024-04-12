@@ -4,7 +4,10 @@ from decimal import *
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-def crawl():
+def crawl(currId):
+    #f= open("./data/IndigoCurrent.json","r")
+    #data=json.load(f)   
+    #return data,currId
     # Make a request to the website
     # Define the URL
     url="https://www.indigo.ca/en-ca/indigo-kids-baby/sale/kids-toys/lego-sets-on-sale/?start=0&sz=500"
@@ -32,27 +35,38 @@ def crawl():
 
         # Create a dictionary with the scraped data
         product = {
-            'name': name,   #Series number
-            'price': price, #Price in cents
-            'href': 'https://www.indigo.ca'+href,  #Link to the product
+            'log_id': currId,   #Unique id for the log
             'date': date,    #Data's date
+            'shop_id': 1,   #Shop's id
+            'set_num': int(name),   #Series number
+            'price': price, #Price in cents
+            'link': 'https://www.indigo.ca'+href,  #Link to the product
+            
         }
+        product['inStock']=(1 if isInStock(product)else 0)
+        product['ships']=(1 if product['inStock'] else 0)
+        product['pickup']='2' #we are not actually checking if the product is available for pickup
         
         # Append the dictionary to the list
         data.append(product)
+        currId+=1
 
     #save the scraped data to a json file
     with open('./data/IndigoCurrent.json', 'w') as outfile:
         json.dump(data, outfile)
         print('Indigo sales data has been scraped and saved to ./data/IndigoCurrent.json')
         outfile.close()
-    return data
+
+    
+
+        
+    return data,currId
 
 #INDIGO DOES NOT HAVE STOCK IN THE SEARCH PAGE, STOCK IS ONLY CHECKED IF THE PRODUCT IS IN THE WATCHLIST
 def isInStock(p):
     # Define the URL    
     #url="https://www.indigo.ca/en-ca/search?q="+p["name"]+"+lego"
-    url=p["href"]
+    url=p["link"]
     response = requests.get(url)
     # Parse the HTML content
     soup = BeautifulSoup(response.content, 'html.parser')

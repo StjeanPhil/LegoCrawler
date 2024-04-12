@@ -6,10 +6,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-def crawl():
-
+def crawl(currId):
+    #f= open("./data/ToysRUsCurrent.json","r")
+    #data=json.load(f)
+    #return data,currId
     url="https://www.toysrus.ca/en/toysrus/Brands/L/LEGO/See-All-LEGO?prefn1=brandFilter&prefv1=LEGO&prefn2=carSeatNHTSARating&prefv2=TRU"
 
+
+    
     #initialize the webdriver
     driver=webdriver.Chrome()
     driver.get(url)
@@ -66,26 +70,34 @@ def crawl():
             href=title.get('href')  
 
             if tile.find('div',class_='b-product_shipping_info')['data-availabilitytype']=="instock":
-                inStock=True
+                inStock=1
             else:
-                inStock=False
-            available=tile.find('div',class_='b-product_shipping_info')['data-availabilitytext']
-            #inStore=           not sure how to get this info/ present this info
+                inStock=0
+            ships=tile.find_all(class_=['js-homeDelivery',' m-available'])
+            ships=1 if ships else 0
+            pickup=tile.find_all(class_=['js-freeInStorePickup',' m-available'])
+            pickup=1 if pickup else 0
+
 
             # Create a dictionary with the scraped data
             product = {
-                'name': name,   #Series number
+                'log_id': currId,   #Unique id for the log
+                'date': date,    #Data's date
+                'shop_id': 4,   #Shop's id
+                'set_num': name,   #Series number
                 'price': price, #Price in cents
-                'href': "https://www.toysrus.ca"+href,  #Link to the product
-                'inStock': inStock, #True if the product is in stock, False otherwise
-                'available': available, # not sure how this work but seems important to add
-                #'inStore': inStore, #True if the product is in store, False otherwise
-                'date': date    #Data's date
+                'link': "https://www.toysrus.ca"+href,  #Link to the product
+                'inStock':inStock, #True if the product is in stock, False otherwise
+                'ships':ships, # not sure how this work but seems important to add
+                'pickup':pickup 
+   
+                
 
             }
 
             # Append the dictionary to the list
             data.append(product)
+            currId+=1
             
 
         except Exception as error:
@@ -98,7 +110,7 @@ def crawl():
         print('ToysRUs sales data has been scraped and saved to ./data/ToysRUsCurrent.json')
         outfile.close()
     
-    return data
+    return data,currId
 
 
 if __name__ == "__main__":

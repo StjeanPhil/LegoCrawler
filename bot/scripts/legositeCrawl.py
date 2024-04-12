@@ -9,7 +9,10 @@ import time
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.action_chains import ActionChains
 
-def crawl() :
+def crawl(currId) :
+    #f= open("./data/LegoSiteCurrent.json","r")
+    #data=json.load(f)
+    #return data,currId
     url ='https://www.lego.com/en-ca/categories/sales-and-deals?filters.i0.key=categories.id&filters.i0.values.i0=12ba8640-7fb5-4281-991d-ac55c65d8001'
     date = datetime.now().strftime('%Y-%m-%d-%H')  # get the current date   
     data=[]
@@ -85,20 +88,28 @@ def crawl() :
                 #Name is the last 5 digits of the href
                 name = re.findall(r'\b\d{5}\b', href)[-1] if href else None
                 if not name : continue
+                
+                inStock=(tile.find('a',attrs={'data-test-availability':'K_SOLD_OUT'}) )
+                inStock=1 if inStock else 0
+                
 
 
                 # Create a dictionary with the scraped data
                 product = {
-                    'name': name,   #Series number
+                    'log_id': currId,   #Unique id for the log
+                    'date' : date, # get the current date
+                    'shop_id': 3,   #Shop's id
+                    'set_num': name,   #Series number
                     'price': price, #Price in cents
-                    'href': "https://www.lego.com"+href,  #Link to the product
-                    #'inStock': inStock, #True if the product is in stock, False otherwise
-                    #'available': available, # not sure how this work but seems important to add
-                    #'inStore': inStore, #True if the product is in store, False otherwise
-                    'date' : date # get the current date
+                    'link': "https://www.lego.com"+href,  #Link to the product
+                    'inStock': inStock, #True if the product is in stock, False otherwise
+                    'ships':inStock , # not sure how this work but seems important to add
+                    'pickup': 2, #True if the product is in store, False otherwise
+                    
                 }
                 # Append the dictionary to the list
                 data.append(product)
+                currId+=1
 
             except Exception as error:
                 print(error)
@@ -110,8 +121,8 @@ def crawl() :
         print('LegoSite sales data has been scraped and saved to ./data/LegoSiteCurrent.json')
         outfile.close()
     
-    return data
+    return data,currId
 
 if __name__ == "__main__":
-    main()
+    crawl()
    
