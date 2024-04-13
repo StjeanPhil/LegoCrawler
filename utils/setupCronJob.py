@@ -13,6 +13,9 @@ cron_schedule2 = f"{minute2} {hour2} * * * /usr/bin/python /LegoCrawler/bot/Main
 
 reshedule = f" 0 0 * * * /usr/bin/python /LegoCrawler/utils/setupCronJob.py"
 
+#delete the old cron job
+subprocess.run(["crontab", "-r"])
+
 # Update the cron job
 with open("/tmp/crontab.txt", "w") as file:
     file.write(f"{cron_schedule1}\n{cron_schedule2}\n")
