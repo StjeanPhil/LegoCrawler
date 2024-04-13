@@ -18,7 +18,7 @@ subprocess.run(["crontab", "-r"])
 
 # Update the cron job
 with open("/tmp/crontab.txt", "w") as file:
-    file.write(f"{cron_schedule1}\n{cron_schedule2}\n{reshedule}")
+    file.write(f"{cron_schedule1}\n{cron_schedule2}\n{reshedule}\n")
 
 # Load the new cron job
 subprocess.run(["crontab", "/tmp/crontab.txt"])
