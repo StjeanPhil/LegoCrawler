@@ -6,10 +6,12 @@ def test():
     cursor = conn.cursor()
 
     #check if set_num already exists
-    print(cursor.execute('''select * FROM watchlist ''').fetchmany(5))
-    
+    #print(cursor.execute('''select * FROM watchlist ''').fetchmany(5))
+    item={}
+    item['shop_id']=3
+    print(cursor.execute('''SELECT name FROM shops WHERE shop_id=(?)''',str(item['shop_id'])).fetchone()[0])
 
-    conn.commit()
+    #conn.commit()
     conn.close()
     
 if __name__ == "__main__":

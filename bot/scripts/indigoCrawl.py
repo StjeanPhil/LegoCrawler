@@ -67,7 +67,7 @@ def isInStock(p):
     # Define the URL    
     #url="https://www.indigo.ca/en-ca/search?q="+p["name"]+"+lego"
     url=p["link"]
-    response = requests.get(url)
+    response = requests.get(url,timeout=4)
     # Parse the HTML content
     soup = BeautifulSoup(response.content, 'html.parser')
     # Find the "add to cart" button
