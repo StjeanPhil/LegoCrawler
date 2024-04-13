@@ -6,14 +6,11 @@ def test():
     cursor = conn.cursor()
 
     #check if set_num already exists
-    print(cursor.execute('''DELETE FROM watchlist '''))
+    print(cursor.execute('''select * FROM watchlist ''').fetchmany(5))
     
 
     conn.commit()
     conn.close()
     
-
-
-
 if __name__ == "__main__":
     test()
