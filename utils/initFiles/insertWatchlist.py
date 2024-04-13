@@ -14,7 +14,7 @@ def insert_shops_from_json():
     for item in data:
         watchlist_id = 1
         set_num = item["name"]
-        target_price = Decimal(item["target_price"])/100
+        target_price = Decimal(item["price"])/100
 
         cursor.execute('''INSERT INTO watchlist (watchlist_id, set_num, target_price) VALUES (?, ?, ?)''', (watchlist_id, set_num, target_price))
 
