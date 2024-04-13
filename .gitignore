@@ -6,3 +6,9 @@
 /scripts/__pycache__
 /node_modules
 LegoLogs.db
+*.json
+*.db
+*.db
+*.db
+LegoLogs.db
+LegoLogs.db
