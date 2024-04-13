@@ -2,7 +2,7 @@ import random
 import subprocess
 
 # Generate random hours for the two executions
-minute = random.randint(0, 59)
+minute = random.randint(1, 59)
 hour = random.randint(0, 12)
 minute2 = random.randint(0, 59)
 hour2 = random.randint(hour+5, 23)

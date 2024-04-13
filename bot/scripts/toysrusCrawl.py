@@ -91,9 +91,6 @@ def crawl(currId):
                 'inStock':inStock, #True if the product is in stock, False otherwise
                 'ships':ships, # not sure how this work but seems important to add
                 'pickup':pickup 
-   
-                
-
             }
 
             # Append the dictionary to the list

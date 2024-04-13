@@ -6,19 +6,26 @@ def print_all_shops():
 
     cursor.execute('''SELECT * FROM shops''')
     shops = cursor.fetchall()
-
+    print("Shops: ")
     for shop in shops:
         print(shop)
     
     #print all products
     cursor.execute('''SELECT * FROM products''')
     products = cursor.fetchmany(5)
+    print("Products: ")
     for product in products:
         print(product)
 
         #print all products
     cursor.execute('''SELECT * FROM watchlist''')
     products = cursor.fetchmany(5)
+    print("Watchlist: ")
+    for product in products:
+        print(product)
+    cursor.execute('''SELECT * FROM logs''')
+    products = cursor.fetchmany(5)
+    print("Logs: ")
     for product in products:
         print(product)
 

@@ -86,7 +86,7 @@ def main():
             json.dump(alerts, outfile)
             print('We found some good deals! :)')
         for alert in alerts:
-            #send a discord alert with : set_num, price, link
+            #send a discord alert 
             sendDiscordAlert(alert)
 
     else:
