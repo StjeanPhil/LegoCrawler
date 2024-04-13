@@ -1,6 +1,7 @@
 import json,re,time
 from bs4 import BeautifulSoup
 from datetime import datetime
+from decimal import Decimal
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -64,7 +65,7 @@ def crawl(currId):
             
 
             price = tile.find('span', class_='b-price-value').text.strip() #find it
-            price = int(price.replace(".","").replace("$",""))  #clean it
+            price = Decimal(price.replace("$",""))  #clean it
             
 
             href=title.get('href')  

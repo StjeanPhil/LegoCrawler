@@ -61,7 +61,7 @@ def main():
         for item in data[site]:
             print(item)
             cursor.execute('''INSERT INTO logs (log_id,datetime,shop_id,set_num,price,inStock,pickup,ships,link) VALUES (?,?,?,?,?,?,?,?,?)''',
-            (item['log_id'],item['date'],item['shop_id'],item['set_num'],Decimal(item['price'])/100,item['inStock'],0,0,item['link']))
+            (item['log_id'],item['date'],item['shop_id'],item['set_num'],Decimal(item['price']),item['inStock'],0,0,item['link']))
             for watch in watchlist:
                 if watch['set_num']==item['set_num']: #if the product is in the watchlist
                     if item['price']<=watch['target_price']:  #if good price (watch['price'] is in dollars, item['price'] is in cents)
@@ -74,7 +74,7 @@ def main():
                             alert["shop"]=cursor.execute('''SELECT name FROM shops WHERE shop_id=(?)''',str(item['shop_id'])).fetchone()[0]
                             alert["name"]=cursor.execute('''SELECT name FROM products WHERE set_num=(?)''',str(item['set_num'])).fetchone()[0]
                             alerts.append(alert)
-                            print("Found a good deal! ",item['set_num'],Decimal(item['price'])/100)
+                            print("Found a good deal! ",item['set_num'],Decimal(item['price']))
     print("Done! Committing changes to DB...")
     conn.commit()
     conn.close()

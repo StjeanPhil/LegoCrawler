@@ -6,7 +6,7 @@ from datetime import datetime
 
 def crawl(currId):
     #f= open("./data/IndigoCurrent.json","r")
-    #data=json.load(f)   
+    #data=json.load(f)
     #return data,currId
     # Make a request to the website
     # Define the URL
@@ -29,7 +29,7 @@ def crawl(currId):
         #check that all char in c are digits
         if not name.isdigit():continue
         
-        price = int(tile.find('span', class_='sale-true').text.strip()[1:].replace(".",""))
+        price = Decimal(tile.find('span', class_='sale-true').text.strip()[1:])
         href=tile.find('a').get('href')
         date = datetime.now().strftime('%Y-%m-%d-%H')  # get the current date
 
@@ -56,10 +56,6 @@ def crawl(currId):
         json.dump(data, outfile)
         print('Indigo sales data has been scraped and saved to ./data/IndigoCurrent.json')
         outfile.close()
-
-    
-
-        
     return data,currId
 
 #INDIGO DOES NOT HAVE STOCK IN THE SEARCH PAGE, STOCK IS ONLY CHECKED IF THE PRODUCT IS IN THE WATCHLIST

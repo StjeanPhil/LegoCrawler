@@ -2,6 +2,7 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.common.by import By
 from datetime import datetime
+from decimal import Decimal
 #import config
 from selenium_stealth import stealth
 import json,re
@@ -79,7 +80,7 @@ def crawl(currId) :
             try:        
                 # Extract the price
                 price_element = tile.find('span', class_='ProductLeaf_discountedPrice__77YmG', attrs={'data-test': 'product-leaf-discounted-price'})
-                price = int(price_element.get_text().replace(" CAD","").replace(".","")) if price_element else None
+                price = Decimal(price_element.get_text().replace(" CAD","")) if price_element else None
 
                 # Extract the href
                 href_element = tile.find('a', attrs={'data-test': 'product-leaf-image-link'})

@@ -1,7 +1,7 @@
 import json
 from bs4 import BeautifulSoup
 from datetime import datetime
-
+from decimal import Decimal
 import re
 from selenium import webdriver
 import time
@@ -64,7 +64,7 @@ def crawl(currId):
             print("error in : "+name)
 
         price = tile.find('span', {'data-automation':'product-price'}).find('span').text.strip() #find it
-        price = int(price.replace(".","").replace("$",""))  #clean it
+        price = Decimal(price.replace("$",""))  #clean it
 
         href=tile.find('a').get('href')
         date = datetime.now().strftime('%Y-%m-%d-%H')  # get the current date
