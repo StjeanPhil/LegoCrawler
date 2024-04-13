@@ -19,7 +19,7 @@ def print_all_shops():
 
         #print all products
     cursor.execute('''SELECT * FROM watchlist''')
-    products = cursor.fetchmany(5)
+    products = cursor.fetchall()
     print("Watchlist: ")
     for product in products:
         print(product)

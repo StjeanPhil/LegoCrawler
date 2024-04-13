@@ -12,10 +12,10 @@ def insert_shops_from_json():
     cursor.execute('''DELETE from watchlist''')
     i=0
     for item in data:
-        watchlist_id = 1
+        watchlist_id = i
         set_num = item["name"]
-        target_price = Decimal(item["price"])/100
-
+        target_price = int(item["price"])/100
+        i+=1
         cursor.execute('''INSERT INTO watchlist (watchlist_id, set_num, target_price) VALUES (?, ?, ?)''', (watchlist_id, set_num, target_price))
 
     conn.commit()
