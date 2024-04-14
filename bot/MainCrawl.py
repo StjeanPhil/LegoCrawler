@@ -2,15 +2,19 @@ import json,sqlite3
 from datetime import datetime
 from decimal import Decimal
 from utils.discordBot import sendDiscordAlert
-from scripts.indigoCrawl import isInStock as isInStockIndigo
+
 from scripts.indigoCrawl import crawl as crawlIndigo
 from scripts.bestbuyCrawl import crawl as crawlBestBuy
 from scripts.toysrusCrawl import crawl as crawlToysRUs
 from scripts.legositeCrawl import crawl as crawlLegoSite
-
+#add log to end of file
+def log(msg):
+    with open('./data/log.txt', 'a') as f:
+        f.write(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ' - '+msg+'\n')
 
 def main():
-    print("Connecting to DB...")
+    log("Starting MainCrawl.py")
+    log("Connecting to DB...")    
     conn = sqlite3.connect('LegoLogs.db')
     conn.row_factory = sqlite3.Row #allows access to columns by name
     cursor = conn.cursor()
@@ -18,7 +22,7 @@ def main():
     #initialize list of alerts
     alerts = []
     #get watchlist
-    print("Retreiving watchlist...")
+    log("Retreiving watchlist...")
     watchlist = cursor.execute('''SELECT * FROM watchlist''').fetchall()
     currentLogs = cursor.execute('''SELECT MAX(log_id) FROM logs ''').fetchone()
     if currentLogs[0] is None:
@@ -27,34 +31,34 @@ def main():
         currentLogs=int(currentLogs[0])+1
         
     #execute the indigoIndigo Crawler
-    print(currentLogs)
+    
     data = {}
-    print("Crawling sites...")
+    log("Crawling sites...")
     try:
-        print("Crawling Indigo...")
+        log("Crawling Indigo...")
         data["indigoData"],currentLogs = crawlIndigo(0)
     except Exception as e:
-        print('Error crawling Indigo: ',e)
-    print(currentLogs)
+        log('Error crawling Indigo: ',e)
+    log(currentLogs)
     try:
-        print("Crawling BestBuy...")
+        log("Crawling BestBuy...")
         data["bestbuyData"],currentLogs = crawlBestBuy(currentLogs)
     except Exception as e:
-        print('Error crawling BestBuy: ',e)
-    print(currentLogs)
+        log('Error crawling BestBuy: ',e)
+    log(currentLogs)
     try:
-        print("Crawling ToysRUs...")
+        log("Crawling ToysRUs...")
         data["toyrusData"],currentLogs = crawlToysRUs(currentLogs)
     except Exception as e:
-        print('Error crawling ToysRUs: ',e)
+        log('Error crawling ToysRUs: ',e)
     try:
-        print("Crawling LegoSite...")
+        log("Crawling LegoSite...")
         data["legositeData"],currentLogs = crawlLegoSite(currentLogs)
     except Exception as e:
-        print('Error crawling LegoSite: ',e)
-    print(currentLogs)
+        log('Error crawling LegoSite: ',e)
+    log(currentLogs)
     
-    print("Comparing new Logs to watchlist...")
+    log("Comparing new Logs to watchlist...")
     #Save the results to the database
     for site in data:
         print(site)
@@ -74,14 +78,15 @@ def main():
                             alert["shop"]=cursor.execute('''SELECT name FROM shops WHERE shop_id=(?)''',str(item['shop_id'])).fetchone()[0]
                             alert["name"]=cursor.execute('''SELECT name FROM products WHERE set_num=(?)''',str(item['set_num'])).fetchone()[0]
                             alerts.append(alert)
-                            print("Found a good deal! ",item['set_num'],Decimal(item['price']))
-    print("Done! Committing changes to DB...")
+                            log("Found a good deal! ",item['set_num'],Decimal(item['price']))
+    log("Done! Committing changes to DB...")
     conn.commit()
     conn.close()
 
 
     #save the alerts to a json file
     if len(alerts) > 0:
+        log("Sending "+len(alerts)+" alerts to dicord")
         with open('./data/hitlist.json', 'w') as outfile:
             json.dump(alerts, outfile)
             print('We found some good deals! :)')
